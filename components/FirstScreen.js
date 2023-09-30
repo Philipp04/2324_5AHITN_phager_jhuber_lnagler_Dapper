@@ -3,9 +3,9 @@ import {StyleSheet, Text, View, Button, Alert, TouchableOpacity, FlatList, Touch
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions } from 'react-native';
-const window = Dimensions.get('window')
+const window = Dimensions.get('window');
 
-export default function First(){
+export function FirstScreen( {navigation} ){
 
 
     const [isPressed, setIsPressed] = useState(false);
@@ -33,35 +33,30 @@ export default function First(){
 
 
     return (
-        <View style={styles.container}>
-            <LinearGradient colors={["#29173D", "#170E28", "#010310"]} start={[0.1, 0.1]} style={styles.linearGradient}>
+            <View style={styles.container}>
+                <LinearGradient colors={["#29173D", "#170E28", "#010310"]} start={[0.1, 0.1]} style={styles.linearGradient}>
 
-                <TouchableWithoutFeedback onPressIn={() => handleButtonPress()} onPressOut={handleButtonRelease} activeOpacity={0.7}>
-                    <View style={[styles.buttonParent, isPressed && styles.pressedButton]}>
-                        <LinearGradient
-                            colors={['#5be9aa', '#09949d']}
-                            style={styles.buttonGrad}>
-                            <Text style={styles.buttonText}>My Button</Text>
-                        </LinearGradient>
+                    <TouchableWithoutFeedback
+                        onPressIn={() => handleButtonPress()}
+                        onPressOut={handleButtonRelease}
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('Second')}>
+
+                        <View style={[styles.buttonParent, isPressed && styles.pressedButton]}>
+                            <LinearGradient colors={['#5be9aa', '#09949d']} style={styles.buttonGrad}>
+                                <Text style={styles.buttonText}>My Button</Text>
+                            </LinearGradient>
+                        </View>
+                    </TouchableWithoutFeedback>
+
+                    <View>
+                        <FlatList data={data} renderItem={renderItem} keyExtractor={(item) => item.id} horizontal={true} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} pagingEnabled={true}
+                        />
+
+
                     </View>
-                </TouchableWithoutFeedback>
-
-                <View>
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        pagingEnabled={true}
-                    />
-
-
-                </View>
-
-            </LinearGradient>
-        </View>
+                </LinearGradient>
+            </View>
     );
 }
 const styles = StyleSheet.create({
