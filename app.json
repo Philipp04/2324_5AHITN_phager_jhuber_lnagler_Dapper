@@ -4,6 +4,14 @@
     "slug": "Dapper",
     "version": "1.0.0",
     "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Dapper to access your photos"
+        }
+      ]
+    ],
     "platforms": [
       "ios",
       "android",
