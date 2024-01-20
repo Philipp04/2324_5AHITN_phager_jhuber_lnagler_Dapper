@@ -22,6 +22,37 @@ export function SignInScreen({ navigation }) {
     const [isPressedSignup, setIsPressedSignUp] = useState(false);
     const [isPressedLogin, setIsPressedLogin] = useState(false);
     const [text, setText] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+
+    const handlePasswordChange = (text) => {
+            setPassword(text);
+    };
+    const handleEmailChange = (text) => {
+        setEmail(text);
+    };
+
+    const postData = {
+        email: email,
+        password: password,
+    };
+
+    const fetchData = () => {
+        console.log('Request Body:', JSON.stringify(postData));
+
+        fetch('http://10.52.43.27:8080/api/v1/user/signin', {
+            method: 'POST',
+            body: JSON.stringify(postData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('POST request successful:', data);
+                navigation.navigate('Introduction');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 
 
     const socialIcons: SocialIcon[] = [
@@ -64,6 +95,7 @@ export function SignInScreen({ navigation }) {
                     iconSize={20}
                     iconWidth={40}
                     inputPadding={16}
+                    onChangeText={handleEmailChange}
                 />
 
             </View>
@@ -78,6 +110,7 @@ export function SignInScreen({ navigation }) {
                     iconSize={20}
                     iconWidth={40}
                     inputPadding={16}
+                    onChangeText={handlePasswordChange}
                 />
             </View>
 
@@ -108,7 +141,7 @@ export function SignInScreen({ navigation }) {
                         activeOpacity={0.7}
                         onPressIn={() => setIsPressedLogin(true)}
                         onPressOut={() => setIsPressedLogin(false)}
-                        onPress={() => navigation.navigate('Introduction')}
+                        onPress={() => fetchData()}
                     >
                         Sign In
                     </ThemedButton>

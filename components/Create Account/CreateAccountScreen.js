@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     StyleSheet,
     Text,
@@ -19,8 +19,9 @@ import AntDesign from "react-native-vector-icons/AntDesign.js";
 import { Dropdown } from 'react-native-element-dropdown';
 import * as ImagePicker from "expo-image-picker";
 
-export function CreateAccountScreen({navigation}){
+export function CreateAccountScreen({route, navigation}){
 
+    const { dataSent } = route.params || {};
 
     const flatListRef = useRef(null);
     const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -28,9 +29,59 @@ export function CreateAccountScreen({navigation}){
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [image, setImage] = useState(null);
+    const [imageUri, setUri] = useState("");
 
     const [nextIndex, setNextIndex] = useState(1);
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [username, setUsername] = useState('');
+    const [terms, setTerms] = useState(false);
+    const [gender, setGender] = useState(null);
+    const [savesexualO1, setSaveSexualO1] = useState("");
+    const [savesexualO2, setSaveSexualO2] = useState("");
+    const [saveGender, setSaveGender] = useState(null);
+    const [savelookingFor, setSaveLookingFor] = useState(null);
+    const [instagram, setInstagram] = useState('');
+    const [snapchat, setSnapchat] = useState('');
+    const [tiktok, setTiktok] = useState('');
+    const [saveCountry, setSaveCountry] = useState('');
+    const [saveState, setSaveState] = useState('');
+    const [saveCity, setSaveCity] = useState('');
+    const [saveInterests, setSaveInterests] = useState('');
 
+    const postData = {
+        email: email, // Text
+        password: password, // Text
+        terms: terms, // Boolean
+        birthday: date, // Text
+        username: username, // Text
+        nickname: nickname, // Text
+        gender: saveGender, // Text
+        sexuality1: savesexualO1, // Text
+        sexuality2: savesexualO2, // Text
+        lookingFor: savelookingFor, // Text
+        interests: dataSent.interests || "", // Array
+        country: saveCountry, // Text
+        state: saveState, // Text
+        city: saveCity, // Text
+        snapchat: snapchat, // Text
+        tiktok: tiktok, // Text
+        instagram: instagram, // Text
+        picture: imageUri, // Text
+    };
+
+    useEffect(() => {
+        setNavigationData(dataSent);
+    }, []);
+
+    const setNavigationData = (dataSent) => {
+        if (dataSent) {
+            setPassword(dataSent.password);
+            setEmail(dataSent.email);
+            setTerms(dataSent.terms)
+        }
+    };
 
     const [isPressed, setIsPressed] = useState(false);
     const [isMalePressed, setIsMalePressed] = useState(false);
@@ -81,6 +132,23 @@ export function CreateAccountScreen({navigation}){
         setIsPressed(false);
     };
 
+    const fetchData = () => {
+        console.log('Request Body:', JSON.stringify(postData));
+
+        fetch('http://10.52.43.27:8080/api/v1/user/signup', {
+            method: 'POST',
+            body: JSON.stringify(postData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('POST request successful:', data);
+                navigation.navigate('SwipePage')
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
 
     const data = [
         { id: '1', header: 'What\'s your birthday', text: 'Be careful! \n This can not be changed', widgetType: 'birthday'},
@@ -108,6 +176,25 @@ export function CreateAccountScreen({navigation}){
         showMode('date');
     };
 
+    const handleNicknameChange = (text) => {
+        setNickname(text);
+    };
+    const handleUsernameChange = (text) => {
+        setUsername(text);
+    };
+
+    const handleInstagramChange = (text) => {
+        setInstagram(text);
+    };
+    const handleSnapchatChange = (text) => {
+        setSnapchat(text);
+    };
+
+    const handleTiktokChange = (text) => {
+        setTiktok(text);
+    };
+
+
     const handleButtonClick = () => {
         flatListRef.current.scrollToIndex({
             animated: true,
@@ -126,16 +213,13 @@ export function CreateAccountScreen({navigation}){
     };
 
     const [value, setValue] = useState(null);
-    const [gender, setGender] = useState(null);
-    const [savesexualO1, setSaveSexualO1] = useState(null);
-    const [savesexualO2, setSaveSexualO2] = useState(null);
 
     const [sexualO1, setSexualO1] = useState(null);
     const [sexualO2, setSexualO2] = useState(null);
+    const [lookingFor, setLookingFor] = useState(null);
     const [country, setCountry] = useState(null);
     const [state, setState] = useState(null);
     const [city, setCity] = useState(null);
-    const [saveGender, setSaveGender] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
 
 
@@ -173,6 +257,7 @@ export function CreateAccountScreen({navigation}){
         { label: 'Item 14', value: '14' },
     ];
 
+
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -186,6 +271,7 @@ export function CreateAccountScreen({navigation}){
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
+            setUri(result.assets[0].uri);
         }
 
     };
@@ -271,6 +357,7 @@ export function CreateAccountScreen({navigation}){
                                 iconWidth={40}
                                 inputPadding={20}
                                 style={styles.inputField}
+                                onChangeText={handleUsernameChange}
                             />
 
                         </View>
@@ -284,6 +371,7 @@ export function CreateAccountScreen({navigation}){
                                 iconSize={20}
                                 iconWidth={40}
                                 inputPadding={20}
+                                onChangeText={handleNicknameChange}
                                 style={styles.inputField}
                             />
 
@@ -447,6 +535,7 @@ export function CreateAccountScreen({navigation}){
                                 )}
                                 onChange={item => {
                                     setSexualO1(item.value)
+                                    setSaveSexualO1(item.label)
                                     if (item.label === "Select your sexuality"){
                                         setIsSexualO1Selected(false)
                                     } else{
@@ -484,6 +573,7 @@ export function CreateAccountScreen({navigation}){
                                 )}
                                 onChange={item => {
                                     setSexualO2(item.value)
+                                    setSaveSexualO2(item.label)
                                     console.log(item.value)
                                     if (item.label === "Select your sexuality"){
                                         setIsSexualO2Selected(false)
@@ -533,9 +623,9 @@ export function CreateAccountScreen({navigation}){
                                 labelField="label"
                                 valueField="value"
                                 backgroundColor={""}
-                                placeholder="Select your sexuality"
+                                placeholder="What are you looking for"
                                 activeColor={'#806491'}
-                                value={sexualO1}
+                                value={lookingFor}
                                 renderRightIcon={() => (
                                     <AntDesign
                                         style={styles.iconDrop}
@@ -545,12 +635,8 @@ export function CreateAccountScreen({navigation}){
                                     />
                                 )}
                                 onChange={item => {
-                                    setSexualO1(item.value)
-                                    if (item.label === "Select your sexuality"){
-                                        setIsSexualO1Selected(false)
-                                    } else{
-                                        setIsSexualO1Selected(true)
-                                    }
+                                    setLookingFor(item.value)
+                                    setSaveLookingFor(item.label)
                                 }}
                             />
                         </View>
@@ -634,6 +720,7 @@ export function CreateAccountScreen({navigation}){
                                 )}
                                 onChange={item => {
                                     setCountry(item.value)
+                                    setSaveCountry(item.label)
                                     if (item.label === "Select your Country"){
                                         setIsCountrySelected(false)
                                     } else{
@@ -670,6 +757,7 @@ export function CreateAccountScreen({navigation}){
                                 )}
                                 onChange={item => {
                                     setState(item.value)
+                                    setSaveState(item.label)
                                     if (item.label === "Select your State"){
                                         setIsStateSelected(false)
                                     } else{
@@ -706,6 +794,7 @@ export function CreateAccountScreen({navigation}){
                                 )}
                                 onChange={item => {
                                     setCity(item.value)
+                                    setSaveCity(item.label)
                                     if (item.label === "Select your City"){
                                         setIsCitySelected(false)
                                     } else{
@@ -751,6 +840,7 @@ export function CreateAccountScreen({navigation}){
                                 iconWidth={40}
                                 inputPadding={20}
                                 style={styles.inputField}
+                                onChangeText={handleSnapchatChange}
                             />
 
                         </View>
@@ -764,6 +854,7 @@ export function CreateAccountScreen({navigation}){
                                 iconWidth={40}
                                 inputPadding={20}
                                 style={styles.inputField}
+                                onChangeText={handleTiktokChange}
                             />
 
                         </View>
@@ -777,6 +868,7 @@ export function CreateAccountScreen({navigation}){
                                 iconWidth={40}
                                 inputPadding={20}
                                 style={styles.inputField}
+                                onChangeText={handleInstagramChange}
                             />
 
                         </View>
@@ -799,7 +891,7 @@ export function CreateAccountScreen({navigation}){
                             onPressIn={() => handleButtonPress()}
                             onPressOut={handleButtonRelease}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('SignUp')}>
+                            onPress={() => fetchData()}>
                             Finish
                         </ThemedButton>
 

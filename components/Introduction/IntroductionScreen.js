@@ -61,7 +61,7 @@ export function IntroductionScreen({navigation}){
 
 
             <View style={styles.container}>
-                <LinearGradient colors={["#29173D", "#170E28", "#010310"]} start={[0.1, 0.1]} style={styles.linearGradient}>
+                <LinearGradient colors={["#29173D", "#170E28", "#010310"]} style={styles.linearGradient}>
 
                     <ThemedButton
                         style={styles.buttonParent}

@@ -9,9 +9,8 @@ import {
     TextInput, TouchableOpacity, Linking,
 } from 'react-native';
 import { ThemedButton } from 'react-native-really-awesome-button';
-import LottieView from 'lottie-react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {Fumi, Hideo, Kohana, Makiko, Sae} from "react-native-textinput-effects";
+import {Fumi} from "react-native-textinput-effects";
 import { SocialIcon } from 'react-native-elements';
 import {CheckBox} from "@rneui/themed";
 
@@ -23,6 +22,10 @@ export function SignUpScreen({ navigation }) {
     const [isPressedSignup, setIsPressedSignUp] = useState(false);
     const [isPressedLogin, setIsPressedLogin] = useState(false);
     const [text, setText] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [check1, setCheck1] = useState(false);
 
 
     const socialIcons: SocialIcon[] = [
@@ -32,7 +35,30 @@ export function SignUpScreen({ navigation }) {
         { socialmedia: 'twitter', url: 'https://www.twitter.com/' },
     ];
 
-    const [check1, setCheck1] = useState(false);
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+    const handleEmailChange = (text) => {
+        setEmail(text);
+    };
+
+    const handleConfirmChange = (text) => {
+        setConfirmPassword(text);
+    };
+
+    const dataSent = {
+        email: email,
+        password: password,
+        terms: check1,
+    };
+
+    const nav = () =>{
+        if(password === confirmPassword && password !== "" && confirmPassword !== "" && email !== ""){
+            navigation.navigate('CreateAccount', { dataSent: dataSent });
+        }
+    }
+
+
 
     const handleSocialIconPress = (url) => {
         Linking.openURL(url).then(() => {
@@ -65,6 +91,7 @@ export function SignUpScreen({ navigation }) {
                     iconWidth={40}
                     inputPadding={16}
                     style={styles.input2}
+                    onChangeText={handleEmailChange}
                 />
 
             </View>
@@ -80,6 +107,7 @@ export function SignUpScreen({ navigation }) {
                     inputPadding={16}
                     style={styles.input2}
                     secureTextEntry={true}
+                    onChangeText={handlePasswordChange}
                 />
             </View>
 
@@ -94,6 +122,7 @@ export function SignUpScreen({ navigation }) {
                     inputPadding={16}
                     style={styles.input2}
                     secureTextEntry={true}
+                    onChangeText={handleConfirmChange}
                 />
             </View>
 
@@ -134,7 +163,7 @@ export function SignUpScreen({ navigation }) {
                         onPressIn={() => setIsPressedSignUp(true)}
                         onPressOut={() => setIsPressedSignUp(false)}
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('CreateAccount')
+                        onPress={() => nav()
                         }>
                         Sign Up
 

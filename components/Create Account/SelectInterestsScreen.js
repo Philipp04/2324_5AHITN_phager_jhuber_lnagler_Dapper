@@ -17,6 +17,7 @@ export function SelectInterestsScreen({navigation}){
     const flatListRef = useRef(null);
     const [isPressed, setIsPressed] = useState(false);
     let sharedVar = []
+    const [savedInterests, setSavedInterests] = useState(sharedVar);
 
     const categories = [
         { label: 'Sport', id: 1,  },
@@ -50,6 +51,10 @@ export function SelectInterestsScreen({navigation}){
         ]
 
     ];
+
+    const dataSent = {
+        interests: savedInterests
+    };
 
     const dataPage2= [
         [
@@ -89,6 +94,8 @@ export function SelectInterestsScreen({navigation}){
 
     const handleButtonPress = () => {
         setIsPressed(true);
+        setSavedInterests(sharedVar)
+        navigation.navigate('CreateAccount', { dataSent: dataSent });
 
     };
 
@@ -101,7 +108,8 @@ export function SelectInterestsScreen({navigation}){
                 const x = sharedVar.splice(index, 1);
             }
 
-        console.log(sharedVar)
+
+        //console.log(sharedVar)
     };
 
 
@@ -116,9 +124,9 @@ export function SelectInterestsScreen({navigation}){
     const [isFocus, setIsFocus] = useState(false);
 
 
-    const handleButtonClick = () => {
-        navigation.navigate("CreateAccount")
-    };
+    const nav = () =>{
+            navigation.navigate('CreateAccount', { dataSent: dataSent });
+    }
 
 
 
@@ -186,10 +194,10 @@ export function SelectInterestsScreen({navigation}){
                                 backgroundDarker={"#0000"}
                                 backgroundColor={"#ffe5e5"}
                                 textColor={"#000"}
-                                onPressIn={() => handleButtonPress()}
+                                onPressIn={() => handleButtonPress}
                                 onPressOut={handleButtonRelease}
                                 activeOpacity={0.7}
-                                onPress={() => handleButtonClick()}>
+                                onPress={() => nav()}>
                                 Back
                             </ThemedButton>
 
