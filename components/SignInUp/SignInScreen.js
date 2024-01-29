@@ -38,6 +38,7 @@ export function SignInScreen({ navigation }) {
     };
 
     const fetchData = () => {
+        navigation.navigate('SwipePage');
         console.log('Request Body:', JSON.stringify(postData));
 
         fetch('http://10.52.43.27:8080/api/v1/user/signin', {
@@ -47,7 +48,7 @@ export function SignInScreen({ navigation }) {
             .then(response => response.json())
             .then(data => {
                 console.log('POST request successful:', data);
-                navigation.navigate('Introduction');
+                navigation.navigate('SwipePage');
             })
             .catch(error => {
                 console.error('Error:', error);

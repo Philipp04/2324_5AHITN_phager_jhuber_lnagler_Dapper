@@ -60,6 +60,8 @@ export function SignUpScreen({ navigation }) {
 
 
 
+
+
     const handleSocialIconPress = (url) => {
         Linking.openURL(url).then(() => {
             console.log('URL erfolgreich geöffnet');

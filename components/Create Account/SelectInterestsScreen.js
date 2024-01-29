@@ -18,6 +18,7 @@ export function SelectInterestsScreen({navigation}){
     const [isPressed, setIsPressed] = useState(false);
     let sharedVar = []
     const [savedInterests, setSavedInterests] = useState(sharedVar);
+    const [selectedCategory, setSelectedCategory] = useState("Sport");
 
     const categories = [
         { label: 'Sport', id: 1,  },
@@ -29,25 +30,25 @@ export function SelectInterestsScreen({navigation}){
 
     const dataPage= [
         [
-            { label: '!', id: 1,isSelected: true },
-            { label: '2', id: 2, isSelected:false },
+            { label: 'Fußball', id: 1,isSelected: false },
+            { label: 'Basketball', id: 2, isSelected:false },
         ],
 
         [
-            { label: 'a', id: 3, isSelected:true},
-            { label: 'b', id: 4, isSelected:false},
+            { label: 'Handball', id: 3, isSelected:false},
+            { label: 'Volleyball', id: 4, isSelected:false},
         ],
         [
-            { label: 'a', id: 5, isSelected:false},
-            { label: 'b', id: 6, isSelected:true},
+            { label: 'Völkerball', id: 5, isSelected:false},
+            { label: 'Tennis', id: 6, isSelected:false},
         ],
         [
-            { label: 'a', id: 7, isSelected:true},
-            { label: 'b', id: 8, isSelected:true},
+            { label: 'Golf', id: 7, isSelected:false},
+            { label: 'Ski', id: 8, isSelected:false},
         ],
         [
-            { label: 'a', id: 9, isSelected:true },
-            { label: 'b', id: 10,isSelected:true },
+            { label: 'Kraftsport', id: 9, isSelected:false },
+            { label: 'Boxen', id: 10,isSelected:false },
         ]
 
     ];
@@ -58,33 +59,33 @@ export function SelectInterestsScreen({navigation}){
 
     const dataPage2= [
         [
-            { label: '!2', id: 11, isSelected:true},
-            { label: '223', id: 12, isSelected:true },
-            { label: '323', id: 13, isSelected:true },
-            { label: '423', id: 14,isSelected:true },
-            { label: '5234', id: 15,isSelected:true },
+            { label: 'Bier', id: 11, isSelected:false},
+            { label: 'Wein', id: 12, isSelected:false },
+            { label: 'Spritzer', id: 13, isSelected:false },
+            { label: 'Mc Donalds', id: 14,isSelected:false },
+            { label: 'KFC', id: 15,isSelected:false },
         ],
 
         [
-            { label: 'a234', id: 16,isSelected:true},
-            { label: 'b234', id: 17,isSelected:true},
-            { label: 'd234sfd', id: 18,isSelected:true},
-            { label: 'dsf234d', id: 19,isSelected:true},
-            { label: 'e234', id: 20,isSelected:true},
+            { label: 'Apfel', id: 16,isSelected:false},
+            { label: 'Birne', id: 17,isSelected:false},
+            { label: 'Banane', id: 18,isSelected:false},
+            { label: 'Orange', id: 19,isSelected:false},
+            { label: 'Tomate', id: 20,isSelected:false},
         ],
         [
-            { label: 'a234', id: 21,isSelected:true},
-            { label: 'b324', id: 22,isSelected:true},
-            { label: 'd234sfd', id: 23,isSelected:true},
-            { label: 'd324sfd', id: 24,isSelected:true},
-            { label: 'e', id: 25,isSelected:true},
+            { label: 'Pasta', id: 21,isSelected:false},
+            { label: 'Vegan', id: 22,isSelected:false},
+            { label: 'Vegetarisch', id: 23,isSelected:false},
+            { label: 'Diet', id: 24,isSelected:false},
+            { label: 'Bulk', id: 25,isSelected:false},
         ],
         [
-            { label: 'a', id: 26,isSelected:true},
-            { label: 'b', id: 27,isSelected:true},
-            { label: 'dsfd', id: 28,isSelected:true},
-            { label: 'dsfd', id: 29,isSelected:true},
-            { label: 'e', id: 30,isSelected:true},
+            { label: 'Nüsse', id: 26,isSelected:false},
+            { label: 'Allergiker', id: 27,isSelected:false},
+            { label: 'Fleisch', id: 28,isSelected:false},
+            { label: 'Reis', id: 29,isSelected:false},
+            { label: 'Fast Food', id: 30,isSelected:false},
         ],
 
     ];
@@ -96,7 +97,6 @@ export function SelectInterestsScreen({navigation}){
         setIsPressed(true);
         setSavedInterests(sharedVar)
         navigation.navigate('CreateAccount', { dataSent: dataSent });
-
     };
 
     const handleInterestChange = (id) => {
@@ -107,9 +107,6 @@ export function SelectInterestsScreen({navigation}){
             }else {
                 const x = sharedVar.splice(index, 1);
             }
-
-
-        //console.log(sharedVar)
     };
 
 
@@ -134,6 +131,9 @@ export function SelectInterestsScreen({navigation}){
 
         const handleCategoryChange = (id) => {
             //TODO: Connect with backend
+
+            const foundCategory = categories.find(category => category.id === id);
+            setSelectedCategory(foundCategory.label)
             console.log(id)
             if (id === 1) {
                 setData(dataPage)
@@ -201,7 +201,7 @@ export function SelectInterestsScreen({navigation}){
                                 Back
                             </ThemedButton>
 
-                            <Text style={styles.header}>Sport</Text>
+                            <Text style={styles.header}>{selectedCategory}</Text>
 
                             <View style={styles.rows}>
                             <FlatList

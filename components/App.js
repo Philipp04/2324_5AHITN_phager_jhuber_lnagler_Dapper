@@ -10,6 +10,7 @@ import {CreateAccountScreen} from "./Create Account/CreateAccountScreen.js";
 import {SelectInterestsScreen} from "./Create Account/SelectInterestsScreen.js";
 import {SwipePageScreen} from "./MainPage/SwipePageScreen.js";
 import {MatchPageScreen} from "./MainPage/MatchPageScreen.js";
+import {ProfileScreen} from "./Profile/ProfileScreen.js";
 
 export default function App(){
 
@@ -48,6 +49,7 @@ export default function App(){
                 <Stack.Screen name="SelectInterests" component={SelectInterestsScreen}/>
                 <Stack.Screen name="SwipePage" component={SwipePageScreen}/>
                 <Stack.Screen name="MatchPage" component={MatchPageScreen}/>
+                <Stack.Screen name="ProfilePage" component={ProfileScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
 

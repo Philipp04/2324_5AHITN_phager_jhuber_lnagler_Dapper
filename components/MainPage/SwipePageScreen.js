@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {
     View,
     Text,
     StyleSheet,
     Dimensions,
-    KeyboardAvoidingView,
-    Platform,
-    TextInput, TouchableOpacity, Linking, ImageBackground, Button,
+    Button
 } from 'react-native';
 import { ThemedButton } from 'react-native-really-awesome-button';
-import LottieView from 'lottie-react-native';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {Fumi, Hideo, Kohana, Makiko, Sae} from "react-native-textinput-effects";
-import { SocialIcon } from 'react-native-elements';
 import AntDesign from "react-native-vector-icons/AntDesign.js";
-import TinderCard from 'react-tinder-card'
 import Swiper from "react-native-deck-swiper";
 
 const window = Dimensions.get('window');
@@ -38,6 +31,7 @@ export function SwipePageScreen({ navigation }) {
     const [isPressedSignup, setIsPressedSignUp] = useState(false);
     const [isPressedLogin, setIsPressedLogin] = useState(false);
     const [text, setText] = useState('');
+    const swiperRef = useRef(null);
 
     const swiped = (direction, nameToDelete) => {
         console.log('removing: ' + nameToDelete)
@@ -53,6 +47,7 @@ export function SwipePageScreen({ navigation }) {
 
             <View style={styles.cardContainer}>
                 <Swiper
+                    ref={swiperRef}
                     cards={['DO', 'MORE', 'OF', 'WHAT', 'MAKES', 'YOU', 'HAPPY']}
                     renderCard={(card) => {
                         return (
@@ -61,17 +56,85 @@ export function SwipePageScreen({ navigation }) {
                             </View>
                         )
                     }}
+
                     onSwiped={(cardIndex) => {console.log(cardIndex)}}
                     onSwipedAll={() => {console.log('onSwipedAll')}}
                     cardIndex={0}
-                    backgroundColor={'#4FD0E9'}
-                    stackSize= {3}>
-                    <Button
-                        onPress={() => {console.log('oulala')}}
-                        title="Press me">
-                        You can press me
-                    </Button>
+                    stackSize= {6}>
                 </Swiper>
+            </View>
+
+            <View style={styles.likes}>
+                <View style={styles.dislike}>
+                    <ThemedButton
+                        name="rick"
+                        type="primary"
+                        backgroundDarker={'#fff'}
+                        backgroundColor={'#FF7F7F'}
+                        width={window.width * 0.25}
+                        textColor={'#fff'}
+                        textSize={20}
+                        textFontFamily={'AbhayaLibre-Medium'}
+                        activeOpacity={0.7}
+                        onPressIn={() => {
+                            swiperRef.current.swipeLeft();
+                        }}
+                    >
+                        <AntDesign
+                            style={styles.iconDrop}
+                            color={'#171C3D'}
+                            name="close"
+                            size={22}
+                        />
+                    </ThemedButton>
+                </View>
+
+            <View style={styles.like}>
+                <ThemedButton
+                    name="rick"
+                    type="primary"
+                    backgroundDarker={'#fff'}
+                    backgroundColor={'#7FFF7F'}
+                    width={window.width * 0.25}
+                    textColor={'#fff'}
+                    textSize={20}
+                    textFontFamily={'AbhayaLibre-Medium'}
+                    activeOpacity={0.7}
+                    onPressIn={() => {
+                        swiperRef.current.swipeRight();
+                    }}
+                >
+                    <AntDesign
+                        style={styles.iconDrop}
+                        color={'#171C3D'}
+                        name="heart"
+                        size={22}
+                    />
+                </ThemedButton>
+            </View>
+            </View>
+
+
+            <View style={styles.profileButton}>
+                <ThemedButton
+                    name="rick"
+                    type="primary"
+                    backgroundDarker={'#fff'}
+                    backgroundColor={'#C9D0FF'}
+                    width={window.width * 0.15}
+                    textColor={'#fff'}
+                    textSize={20}
+                    textFontFamily={'AbhayaLibre-Medium'}
+                    activeOpacity={0.7}
+                    onPress={() => navigation.navigate('ProfilePage')}
+                >
+                    <AntDesign
+                        style={styles.iconDrop}
+                        color={'#171C3D'}
+                        name="user"
+                        size={22}
+                    />
+                </ThemedButton>
             </View>
 
 
@@ -94,7 +157,7 @@ export function SwipePageScreen({ navigation }) {
                         <AntDesign
                             style={styles.iconDrop}
                             color={'#171C3D'}
-                            name="setting"
+                            name="filter"
                             size={22}
                         />
                     </ThemedButton>
@@ -112,12 +175,12 @@ export function SwipePageScreen({ navigation }) {
                         activeOpacity={0.7}
                         onPressIn={() => setIsPressedLogin(true)}
                         onPressOut={() => setIsPressedLogin(false)}
-                        onPress={() => navigation.navigate('Introduction')}
+                        onPress={() => navigation.navigate('ProfileScreen')}
                     >
                         <AntDesign
                             style={styles.iconDrop}
                             color={'#171C3D'}
-                            name="user"
+                            name="Trophy"
                             size={22}
                         />
                     </ThemedButton>
@@ -210,11 +273,11 @@ const styles = StyleSheet.create({
 
     buttons: {
         flexDirection: 'row',
-        top: window.height*0.35
+        top: window.height*0.30
     },
 
     loginButtonContainer: {
-        top: window.height * 0.02,
+        top: window.height * 0.04,
         paddingLeft: window.width*0.01,
         paddingRight: window.width*0.01
     },
@@ -229,7 +292,7 @@ const styles = StyleSheet.create({
         alignContent: "center",
         alignItems: "center",
         width: window.width,
-        bottom: window.height*0.3
+        bottom: window.height*0.28,
     },
     card: {
         backgroundColor: '#C9D0FF',
@@ -263,4 +326,18 @@ const styles = StyleSheet.create({
         display: 'flex',
         zIndex: -100,
     },
+    like: {
+        marginLeft: window.width*0.05,
+    },
+    dislike: {
+        marginRight: window.width*0.05,
+    },
+    likes: {
+        top: window.height*0.36,
+        flexDirection: 'row',
+    },
+    profileButton: {
+        bottom: window.height*0.39,
+        right: window.width*0.34,
+    }
 });

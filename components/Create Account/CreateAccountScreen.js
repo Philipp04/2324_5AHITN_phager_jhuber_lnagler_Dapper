@@ -1,23 +1,25 @@
 import React, {useEffect, useRef, useState} from "react";
 import {
-    StyleSheet,
-    Text,
-    View,
+    Animated,
+    Dimensions,
     FlatList,
     Image,
-    Animated,
-    Platform, KeyboardAvoidingView, Button
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    View
 } from "react-native";
-import { Dimensions } from 'react-native';
-const window = Dimensions.get('window');
-import PaginationDots, {ExpandingDot, SlidingDot} from 'react-native-animated-pagination-dots';
+import {ExpandingDot} from 'react-native-animated-pagination-dots';
 import {ThemedButton} from "react-native-really-awesome-button";
-import DateTimePicker, {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {Fumi} from "react-native-textinput-effects";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome.js";
 import AntDesign from "react-native-vector-icons/AntDesign.js";
-import { Dropdown } from 'react-native-element-dropdown';
+import {Dropdown} from 'react-native-element-dropdown';
 import * as ImagePicker from "expo-image-picker";
+
+const window = Dimensions.get('window');
 
 export function CreateAccountScreen({route, navigation}){
 
@@ -73,7 +75,41 @@ export function CreateAccountScreen({route, navigation}){
 
     useEffect(() => {
         setNavigationData(dataSent);
+        fetchCountries();
     }, []);
+
+
+
+    const fetchCountries = async () => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/country/get');
+            const result = await response.json();
+            setCountries(result.map(item => ({ id: item.id, name: item.name })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
+    const fetchState = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/state/' + id);
+            const result = await response.json();
+            setStates(result.map(item => ({ id: item.id, name: item.name })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
+    const fetchCity = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/city/' + id);
+            const result = await response.json();
+            setCities(result.map(item => ({ id: item.id, name: item.name })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
 
     const setNavigationData = (dataSent) => {
         if (dataSent) {
@@ -221,6 +257,9 @@ export function CreateAccountScreen({route, navigation}){
     const [state, setState] = useState(null);
     const [city, setCity] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
+    const [countries, setCountries] = useState([])
+    const [states, setStates] = useState([])
+    const [cities, setCities] = useState([])
 
 
     const genders = [
@@ -256,6 +295,8 @@ export function CreateAccountScreen({route, navigation}){
         { label: 'Item 13', value: '13' },
         { label: 'Item 14', value: '14' },
     ];
+
+
 
 
     const pickImage = async () => {
@@ -701,11 +742,11 @@ export function CreateAccountScreen({route, navigation}){
                                 containerStyle={styles.inputStyle}
                                 itemContainerStyle={styles.itemContainerStyle}
                                 itemTextStyle={styles.itemTextStyle}
-                                data={sexualities}
+                                data={countries}
                                 maxHeight={300}
                                 mode={"modal"}
-                                labelField="label"
-                                valueField="value"
+                                labelField="name"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Select your Country"
                                 activeColor={'#806491'}
@@ -719,9 +760,11 @@ export function CreateAccountScreen({route, navigation}){
                                     />
                                 )}
                                 onChange={item => {
-                                    setCountry(item.value)
-                                    setSaveCountry(item.label)
-                                    if (item.label === "Select your Country"){
+                                    setCountry(item.id)
+                                    setSaveCountry(item.name)
+                                    setCities([])
+                                    fetchState(item.id)
+                                    if (item.name === "Select your Country"){
                                         setIsCountrySelected(false)
                                     } else{
                                         setIsCountrySelected(true)
@@ -738,11 +781,11 @@ export function CreateAccountScreen({route, navigation}){
                                 containerStyle={styles.inputStyle}
                                 itemContainerStyle={styles.itemContainerStyle}
                                 itemTextStyle={styles.itemTextStyle}
-                                data={sexualities}
+                                data={states}
                                 maxHeight={300}
                                 mode={"modal"}
-                                labelField="label"
-                                valueField="value"
+                                labelField="name"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Select your State"
                                 activeColor={'#806491'}
@@ -756,9 +799,10 @@ export function CreateAccountScreen({route, navigation}){
                                     />
                                 )}
                                 onChange={item => {
-                                    setState(item.value)
-                                    setSaveState(item.label)
-                                    if (item.label === "Select your State"){
+                                    setState(item.id)
+                                    setSaveState(item.name)
+                                    fetchCity(item.id)
+                                    if (item.name === "Select your State"){
                                         setIsStateSelected(false)
                                     } else{
                                         setIsStateSelected(true)
@@ -775,11 +819,11 @@ export function CreateAccountScreen({route, navigation}){
                                 containerStyle={styles.inputStyle}
                                 itemContainerStyle={styles.itemContainerStyle}
                                 itemTextStyle={styles.itemTextStyle}
-                                data={sexualities}
+                                data={cities}
                                 maxHeight={300}
                                 mode={"modal"}
-                                labelField="label"
-                                valueField="value"
+                                labelField="name"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Select your City"
                                 activeColor={'#806491'}
@@ -793,13 +837,8 @@ export function CreateAccountScreen({route, navigation}){
                                     />
                                 )}
                                 onChange={item => {
-                                    setCity(item.value)
-                                    setSaveCity(item.label)
-                                    if (item.label === "Select your City"){
-                                        setIsCitySelected(false)
-                                    } else{
-                                        setIsCitySelected(true)
-                                    }
+                                    setCity(item.id)
+                                    setSaveCity(item.name)
                                 }}
                             />
                         </View>
