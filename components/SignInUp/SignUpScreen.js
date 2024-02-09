@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -26,6 +26,8 @@ export function SignUpScreen({ navigation }) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [email, setEmail] = useState('');
     const [check1, setCheck1] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
 
 
     const socialIcons: SocialIcon[] = [
@@ -34,6 +36,46 @@ export function SignUpScreen({ navigation }) {
         { socialmedia: 'google', url: 'https://www.google.com/' },
         { socialmedia: 'twitter', url: 'https://www.twitter.com/' },
     ];
+
+    useEffect(() => {
+        console.log("update")
+
+        validateForm();
+        console.log(email)
+        console.log(password)
+        console.log(confirmPassword)
+        console.log(check1)
+        console.log(errors)
+        console.log(isFormValid)
+    }, [email, password, confirmPassword, check1]);
+
+    const validateForm = () => {
+        let errors = {};
+
+        if (!email) {
+            errors.email = 'Email is required.';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            errors.email = 'Email is invalid.';
+        }
+
+        if (!password) {
+            errors.password = 'Password is required.';
+        } else if (password.length < 10) {
+            errors.password = 'Password must be at least 10 characters.';
+        }
+
+        if(password !== confirmPassword){
+            errors.confirmPassword = "Passwords don't match!"
+        }
+
+        if (!check1){
+            errors.check1 = "Must agree to terms and conditions!"
+        }
+
+        setErrors(errors);
+        setIsFormValid(Object.keys(errors).length === 0);
+    };
+
 
     const handlePasswordChange = (text) => {
         setPassword(text);
@@ -53,7 +95,8 @@ export function SignUpScreen({ navigation }) {
     };
 
     const nav = () =>{
-        if(password === confirmPassword && password !== "" && confirmPassword !== "" && email !== ""){
+        console.log(isFormValid)
+        if(isFormValid){
             navigation.navigate('CreateAccount', { dataSent: dataSent });
         }
     }
@@ -94,9 +137,17 @@ export function SignUpScreen({ navigation }) {
                     inputPadding={16}
                     style={styles.input2}
                     onChangeText={handleEmailChange}
+                    value={email}
                 />
 
+                <Text style={styles.error}>
+                    {errors.email}
+                </Text>
+
             </View>
+
+
+
 
             <View style={styles.passwordInputContainer}>
                 <Fumi
@@ -110,7 +161,11 @@ export function SignUpScreen({ navigation }) {
                     style={styles.input2}
                     secureTextEntry={true}
                     onChangeText={handlePasswordChange}
+                    value={password}
                 />
+                <Text style={styles.error}>
+                    {errors.password}
+                </Text>
             </View>
 
             <View style={styles.confirmpasswordInputContainer}>
@@ -125,7 +180,11 @@ export function SignUpScreen({ navigation }) {
                     style={styles.input2}
                     secureTextEntry={true}
                     onChangeText={handleConfirmChange}
+                    value={confirmPassword}
                 />
+                <Text style={styles.error}>
+                    {errors.confirmPassword}
+                </Text>
             </View>
 
             <View style={styles.checkbox}>
@@ -135,6 +194,9 @@ export function SignUpScreen({ navigation }) {
                     size={34}
                     onPress={() => setCheck1(!check1)}
                 />
+                <Text style={styles.error}>
+                    {errors.check1}
+                </Text>
             </View>
 
 
@@ -169,7 +231,10 @@ export function SignUpScreen({ navigation }) {
                         }>
                         Sign Up
 
+
                     </ThemedButton>
+
+
                 </View>
             </View>
 
@@ -282,6 +347,11 @@ const styles = StyleSheet.create({
     checkbox: {
         top: window.height*0.01,
         alignSelf: "flex-start",
+    },
+    error: {
+        color: 'red',
+        fontSize: 10,
+        marginLeft: 20,
     }
 
 
