@@ -9,10 +9,10 @@ import {
     TextInput, TouchableOpacity, Linking,
 } from 'react-native';
 import { ThemedButton } from 'react-native-really-awesome-button';
-import LottieView from 'lottie-react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi, Hideo, Kohana, Makiko, Sae} from "react-native-textinput-effects";
 import { SocialIcon } from 'react-native-elements';
+import LottieView from "lottie-react-native";
 
 const window = Dimensions.get('window');
 
@@ -80,38 +80,28 @@ export function SignInScreen({ navigation }) {
             <View style={styles.loginGifView}>
                 <LottieView
                     style={styles.loginGifStyle}
-                    source={require('../../assets/images/login.json')} // Replace with the path to your Lottie animation file
-                    autoPlay // Set autoPlay to true for autoplay
-                    loop // Set loop to true for looping
+                    source={require('../../assets/images/gif.json')}
+                    autoPlay
+                    loop
                 />
             </View>
 
 
             <View style={styles.emailInputContainer}>
-                <Fumi
-                    label={'Email'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'envelope'}
-                    iconColor={'#1e0412'}
-                    iconSize={20}
-                    iconWidth={40}
-                    inputPadding={16}
+                <TextInput
+                    style={styles.input2}
                     onChangeText={handleEmailChange}
+                    placeholder={'Email'}
                 />
 
             </View>
 
             <View style={styles.passwordInputContainer}>
-                <Fumi
-                    label={"Password"}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'key'}
-                    secureTextEntry={true}
-                    iconColor={'#1e0412'}
-                    iconSize={20}
-                    iconWidth={40}
-                    inputPadding={16}
+                <TextInput
+                    style={styles.input2}
                     onChangeText={handlePasswordChange}
+                    secureTextEntry={true}
+                    placeholder={'Password'}
                 />
             </View>
 
@@ -197,7 +187,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
-        width: window.width*0.8
+        width: window.width*0.8,
+        height: window.height*0.35,
     },
 
     socialIconView: {
@@ -215,6 +206,13 @@ const styles = StyleSheet.create({
         width: window.width*0.13,
         alignSelf: "center",
 
-    }
+    },
+    input2: {
+        fontSize: 16,
+        width: window.width*0.8,
+        borderWidth: 1,
+        alignSelf: "center",
+        padding: 16,
+    },
 
 });

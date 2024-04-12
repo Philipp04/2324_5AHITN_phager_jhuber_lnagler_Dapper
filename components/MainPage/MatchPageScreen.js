@@ -9,6 +9,7 @@ import {
     TextInput, TouchableOpacity, Linking, ImageBackground, Button, SafeAreaView, ScrollView, Image, FlatList
 } from 'react-native';
 
+
 import { ThemedButton } from 'react-native-really-awesome-button';
 import AntDesign from "react-native-vector-icons/AntDesign.js";
 
@@ -80,15 +81,15 @@ const CustomComponent = ({ text, color, picture, symbol }) => (
 export function MatchPageScreen({ navigation }) {
 
     const [dataArray, setDataArray] = useState([
-        { id: 1, text: 'Komponente 1', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
-        { id: 2, text: 'Komponente 1', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
-        { id: 3, text: 'Komponente 1', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
-        { id: 4, text: 'Komponente 1', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
-        { id: 5, text: 'Komponente 1', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
-        { id: 6, text: 'Komponente 1', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
-        { id: 7, text: 'Komponente 1', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
-        { id: 8, text: 'Komponente 1', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
-        { id: 9, text: 'Komponente 1', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
+        { id: 1, text: 'Sarah Müller', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
+        { id: 2, text: 'Julia Huber', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
+        { id: 3, text: 'Lucy Nagler', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
+        { id: 4, text: 'Philippa Hager', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
+        { id: 5, text: 'Eline Miklautsch', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
+        { id: 6, text: 'Daniela Wimmer', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
+        { id: 7, text: 'Manuela Rester', color: '#00D7E4',picture: require('../../assets/images/female.png'), symbol: "bulb1" },
+        { id: 8, text: 'Nicole Mekina', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
+        { id: 9, text: 'Stephanie Prechtl', color: '#C9D0FF', picture: require('../../assets/images/female.png'), symbol: "check" },
     ]);
 
     const addNewComponent = () => {
@@ -112,7 +113,6 @@ export function MatchPageScreen({ navigation }) {
                 )}
             />
             </View>
-
 
         </View>
     );
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         height: window.height * 0.24,
     },
     matchItems: {
-        flexDirection: 'row',
+        flexDirection: "row",
         right: window.width*0.015
     },
     name: {

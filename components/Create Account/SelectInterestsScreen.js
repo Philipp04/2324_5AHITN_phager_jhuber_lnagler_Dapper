@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     StyleSheet,
     Text,
@@ -7,11 +7,85 @@ import {
 } from "react-native";
 import { Dimensions } from 'react-native';
 const window = Dimensions.get('window');
-import PaginationDots, {ExpandingDot, SlidingDot} from 'react-native-animated-pagination-dots';
 import {ThemedButton} from "react-native-really-awesome-button";
 import InterestButton from "./InterestButton.js";
 
 export function SelectInterestsScreen({navigation}){
+    const initialCategoriesState = [
+        {
+            id: 0,
+            label: 'Category 1',
+            interests: [  {
+                id: 0,
+                label: "1"
+            }]
+        },
+        {
+            id: 1,
+            label: 'Category 2',
+            interests: [  {
+                id: 0,
+                label: "1"
+            }]
+        },
+        {
+            id: 2,
+            label: 'Category 3',
+            interests: [  {
+                id: 0,
+                label: "1"
+            }]
+        },
+        {
+            id: 3,
+            label: 'Category 4',
+            interests: [  {
+                id: 0,
+                label: "1"
+            }]
+        },
+        {
+            id: 4,
+            label: 'Category 5',
+            interests: [
+                {
+                    id: 0,
+                    label: "1"
+                }
+            ]
+        },
+        {
+            id: 5,
+            label: 'Category 6',
+            interests: [
+                {
+                    id: 0,
+                    label: "1"
+                }
+            ]
+        },
+        {
+            id: 6,
+            label: 'Category 7',
+            interests: [
+                {
+                    id: 0,
+                    label: "1"
+                }
+            ]
+        },
+        {
+            id: 7,
+            label: 'Category 8',
+            interests: [
+                {
+                    id: 0,
+                    label: "1"
+                }
+            ]
+        },
+
+    ];
 
 
     const flatListRef = useRef(null);
@@ -19,77 +93,41 @@ export function SelectInterestsScreen({navigation}){
     let sharedVar = []
     const [savedInterests, setSavedInterests] = useState(sharedVar);
     const [selectedCategory, setSelectedCategory] = useState("Sport");
+    const [categories, setCategories] = new useState(initialCategoriesState)
 
-    const categories = [
-        { label: 'Sport', id: 1,  },
-        { label: 'Food & Drinks', id: 2 },
-        { label: 'Personality', id: 3 },
-        { label: 'Hobby', id: 4 },
-        { label: 'Video Games', id: 5 },
-    ];
 
-    const dataPage= [
-        [
-            { label: 'Fußball', id: 1,isSelected: false },
-            { label: 'Basketball', id: 2, isSelected:false },
-        ],
+    const fetchCategories = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/category/get');
+            const result = await response.json();
+            setCategories(
+                result.map(item => ({
+                    id: item.id,
+                    label: item.name,
+                    interests: item.interests.map(interest => ({
+                        id: interest.id,
+                        label: interest.name
+                    }))
+                }))
+            );
 
-        [
-            { label: 'Handball', id: 3, isSelected:false},
-            { label: 'Volleyball', id: 4, isSelected:false},
-        ],
-        [
-            { label: 'Völkerball', id: 5, isSelected:false},
-            { label: 'Tennis', id: 6, isSelected:false},
-        ],
-        [
-            { label: 'Golf', id: 7, isSelected:false},
-            { label: 'Ski', id: 8, isSelected:false},
-        ],
-        [
-            { label: 'Kraftsport', id: 9, isSelected:false },
-            { label: 'Boxen', id: 10,isSelected:false },
-        ]
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
 
-    ];
+    useEffect(() => {
+        fetchCategories()
+    }, []);
+
 
     const dataSent = {
         interests: savedInterests
     };
 
-    const dataPage2= [
-        [
-            { label: 'Bier', id: 11, isSelected:false},
-            { label: 'Wein', id: 12, isSelected:false },
-            { label: 'Spritzer', id: 13, isSelected:false },
-            { label: 'Mc Donalds', id: 14,isSelected:false },
-            { label: 'KFC', id: 15,isSelected:false },
-        ],
+    const [data, setData] = useState([]);
 
-        [
-            { label: 'Apfel', id: 16,isSelected:false},
-            { label: 'Birne', id: 17,isSelected:false},
-            { label: 'Banane', id: 18,isSelected:false},
-            { label: 'Orange', id: 19,isSelected:false},
-            { label: 'Tomate', id: 20,isSelected:false},
-        ],
-        [
-            { label: 'Pasta', id: 21,isSelected:false},
-            { label: 'Vegan', id: 22,isSelected:false},
-            { label: 'Vegetarisch', id: 23,isSelected:false},
-            { label: 'Diet', id: 24,isSelected:false},
-            { label: 'Bulk', id: 25,isSelected:false},
-        ],
-        [
-            { label: 'Nüsse', id: 26,isSelected:false},
-            { label: 'Allergiker', id: 27,isSelected:false},
-            { label: 'Fleisch', id: 28,isSelected:false},
-            { label: 'Reis', id: 29,isSelected:false},
-            { label: 'Fast Food', id: 30,isSelected:false},
-        ],
 
-    ];
-    const [data, setData] = useState(dataPage);
 
 
 
@@ -102,14 +140,13 @@ export function SelectInterestsScreen({navigation}){
     const handleInterestChange = (id) => {
             const index = sharedVar.indexOf(id);
             console.log(index + " sd")
+            console.log(id)
             if (index === -1) {
                 sharedVar.push(id)
             }else {
                 const x = sharedVar.splice(index, 1);
             }
     };
-
-
 
 
     const handleButtonRelease = () => {
@@ -125,24 +162,30 @@ export function SelectInterestsScreen({navigation}){
             navigation.navigate('CreateAccount', { dataSent: dataSent });
     }
 
+    const handleCategoryChange = (id) => {
+        const startDate = new Date();
+        const categoryMap = new Map(categories.map(category => [category.id, category]));
+        const foundCategory = categoryMap.get(id);
+        setSelectedCategory(foundCategory.label)
+        const chunkSize = foundCategory.interests.length/4;
+        let array = 0;
+        let first = []
+        const endDate = new Date();
+
+        for (let i = 0; i < foundCategory.interests.length; i += chunkSize) {
+            const chunk = foundCategory.interests.slice(i, i + chunkSize);
+            first.push(chunk);
+        }
+
+        setData(first);
+
+        sharedVar = []
+
+        console.log(endDate - startDate);
+    };
 
 
     const renderItem = ({ item }) => {
-
-        const handleCategoryChange = (id) => {
-            //TODO: Connect with backend
-
-            const foundCategory = categories.find(category => category.id === id);
-            setSelectedCategory(foundCategory.label)
-            console.log(id)
-            if (id === 1) {
-                setData(dataPage)
-            } else if (id === 2){
-                setData(dataPage2)
-            }
-            sharedVar = []
-        };
-
         return (
             <View style={styles.categoryContainer}>
         <ThemedButton
@@ -165,9 +208,8 @@ export function SelectInterestsScreen({navigation}){
     }
 
     const renderItem2 = ({ item }) => {
-
         return (
-            <InterestButton name={item.label} id={item.id} isSelected={item.isSelected} onChange={handleInterestChange} />
+            <InterestButton name={item.label} id={item.id} onChange={handleInterestChange} />
         )
     }
 
@@ -178,7 +220,7 @@ export function SelectInterestsScreen({navigation}){
                             ref={flatListRef}
                             data={categories}
                             renderItem={renderItem}
-                            keyExtractor={(item) => item.id}
+                            keyExtractor={categories.id}
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false}

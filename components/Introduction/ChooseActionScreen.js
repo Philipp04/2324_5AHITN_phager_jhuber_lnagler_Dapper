@@ -21,7 +21,7 @@ export function ChooseActionScreen( {navigation} ){
             </View>
 
             <View>
-                <Text style={styles.header}>Welcome to Lube</Text>
+                <Text style={styles.header}>Welcome to Dapper</Text>
             </View>
 
             <View style={styles.texts}>

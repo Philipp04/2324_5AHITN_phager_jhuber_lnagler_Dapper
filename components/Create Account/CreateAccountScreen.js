@@ -7,7 +7,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
-    Text,
+    Text, TextInput,
     View
 } from "react-native";
 import {ExpandingDot} from 'react-native-animated-pagination-dots';
@@ -40,16 +40,16 @@ export function CreateAccountScreen({route, navigation}){
     const [username, setUsername] = useState('');
     const [terms, setTerms] = useState(false);
     const [gender, setGender] = useState(null);
-    const [savesexualO1, setSaveSexualO1] = useState("");
-    const [savesexualO2, setSaveSexualO2] = useState("");
+    const [savesexualO1, setSaveSexualO1] = useState(0);
+    const [savesexualO2, setSaveSexualO2] = useState(0);
     const [saveGender, setSaveGender] = useState(null);
     const [savelookingFor, setSaveLookingFor] = useState(null);
     const [instagram, setInstagram] = useState('');
     const [snapchat, setSnapchat] = useState('');
     const [tiktok, setTiktok] = useState('');
-    const [saveCountry, setSaveCountry] = useState('');
-    const [saveState, setSaveState] = useState('');
-    const [saveCity, setSaveCity] = useState('');
+    const [saveCountry, setSaveCountry] = useState(0);
+    const [saveState, setSaveState] = useState(0);
+    const [saveCity, setSaveCity] = useState(0);
     const [saveInterests, setSaveInterests] = useState('');
 
     const postData = {
@@ -76,6 +76,9 @@ export function CreateAccountScreen({route, navigation}){
     useEffect(() => {
         setNavigationData(dataSent);
         fetchCountries();
+        fetchLookingFor();
+        fetchSexualities();
+        fetchGenders();
     }, []);
 
 
@@ -105,6 +108,36 @@ export function CreateAccountScreen({route, navigation}){
             const response = await fetch('http://10.52.43.27:8080/city/' + id);
             const result = await response.json();
             setCities(result.map(item => ({ id: item.id, name: item.name })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
+    const fetchSexualities = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/sexuality/get');
+            const result = await response.json();
+            setSexualities(result.map(item => ({ id: item.id, label: item.name })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
+    const fetchLookingFor = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/lookingfor/get');
+            const result = await response.json();
+            setLookingFors(result.map(item => ({ id: item.id, label: item.description })));
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+        }
+    };
+
+    const fetchGenders = async (id) => {
+        try {
+            const response = await fetch('http://10.52.43.27:8080/genders/get');
+            const result = await response.json();
+            setGenders(result.map(item => ({ id: item.id, label: item.name })));
         } catch (error) {
             console.error('Fehler beim Abrufen der Daten:', error);
         }
@@ -181,6 +214,7 @@ export function CreateAccountScreen({route, navigation}){
                 navigation.navigate('SwipePage')
             })
             .catch(error => {
+                console.log(postData)
                 console.error('Error:', error);
             });
     };
@@ -260,41 +294,9 @@ export function CreateAccountScreen({route, navigation}){
     const [countries, setCountries] = useState([])
     const [states, setStates] = useState([])
     const [cities, setCities] = useState([])
-
-
-    const genders = [
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
-        { label: 'Item 9', value: '9' },
-        { label: 'Item 10', value: '10' },
-        { label: 'Item 11', value: '11' },
-        { label: 'Item 12', value: '12' },
-        { label: 'Item 13', value: '13' },
-        { label: 'Item 14', value: '14' },
-    ];
-
-    const sexualities = [
-        { label: 'Select your sexuality', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
-        { label: 'Item 9', value: '9' },
-        { label: 'Item 10', value: '10' },
-        { label: 'Item 11', value: '11' },
-        { label: 'Item 12', value: '12' },
-        { label: 'Item 13', value: '13' },
-        { label: 'Item 14', value: '14' },
-    ];
+    const [lookingFors, setLookingFors] = useState([])
+    const [sexualities, setSexualities] = useState([])
+    const [genders, setGenders] = useState([])
 
 
 
@@ -389,31 +391,19 @@ export function CreateAccountScreen({route, navigation}){
                         <Text style={styles.text}>{item.text}</Text>
 
                         <View style={styles.userinputContainer}>
-                            <Fumi
-                                label={'Username'}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'address-book-o'}
-                                iconColor={'#1e0412'}
-                                iconSize={20}
-                                iconWidth={40}
-                                inputPadding={20}
+                            <TextInput
                                 style={styles.inputField}
                                 onChangeText={handleUsernameChange}
+                                placeholder={'Username'}
                             />
 
                         </View>
 
                         <View style={styles.nickinputContainer}>
-                            <Fumi
-                                label={'Nickname'}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'id-card'}
-                                iconColor={'#1e0412'}
-                                iconSize={20}
-                                iconWidth={40}
-                                inputPadding={20}
-                                onChangeText={handleNicknameChange}
+                            <TextInput
                                 style={styles.inputField}
+                                onChangeText={handleNicknameChange}
+                                placeholder={'Nickname'}
                             />
 
                         </View>
@@ -503,7 +493,7 @@ export function CreateAccountScreen({route, navigation}){
                                 maxHeight={300}
                                 mode={"modal"}
                                 labelField="label"
-                                valueField="value"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Others"
                                 activeColor={'#806491'}
@@ -561,7 +551,7 @@ export function CreateAccountScreen({route, navigation}){
                                 maxHeight={300}
                                 mode={"modal"}
                                 labelField="label"
-                                valueField="value"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Select your sexuality"
                                 activeColor={'#806491'}
@@ -576,7 +566,7 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setSexualO1(item.value)
-                                    setSaveSexualO1(item.label)
+                                    setSaveSexualO1(item.id)
                                     if (item.label === "Select your sexuality"){
                                         setIsSexualO1Selected(false)
                                     } else{
@@ -599,7 +589,7 @@ export function CreateAccountScreen({route, navigation}){
                                 maxHeight={300}
                                 mode={"modal"}
                                 labelField="label"
-                                valueField="value"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="Select your sexuality"
                                 activeColor={'#806491'}
@@ -614,7 +604,7 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setSexualO2(item.value)
-                                    setSaveSexualO2(item.label)
+                                    setSaveSexualO2(item.id)
                                     console.log(item.value)
                                     if (item.label === "Select your sexuality"){
                                         setIsSexualO2Selected(false)
@@ -658,11 +648,11 @@ export function CreateAccountScreen({route, navigation}){
                                 containerStyle={styles.inputStyle}
                                 itemContainerStyle={styles.itemContainerStyle}
                                 itemTextStyle={styles.itemTextStyle}
-                                data={sexualities}
+                                data={lookingFors}
                                 maxHeight={300}
                                 mode={"modal"}
                                 labelField="label"
-                                valueField="value"
+                                valueField="id"
                                 backgroundColor={""}
                                 placeholder="What are you looking for"
                                 activeColor={'#806491'}
@@ -677,7 +667,7 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setLookingFor(item.value)
-                                    setSaveLookingFor(item.label)
+                                    setSaveLookingFor(item.id)
                                 }}
                             />
                         </View>
@@ -761,7 +751,7 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setCountry(item.id)
-                                    setSaveCountry(item.name)
+                                    setSaveCountry(item.id)
                                     setCities([])
                                     fetchState(item.id)
                                     if (item.name === "Select your Country"){
@@ -800,7 +790,7 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setState(item.id)
-                                    setSaveState(item.name)
+                                    setSaveState(item.id)
                                     fetchCity(item.id)
                                     if (item.name === "Select your State"){
                                         setIsStateSelected(false)
@@ -838,7 +828,12 @@ export function CreateAccountScreen({route, navigation}){
                                 )}
                                 onChange={item => {
                                     setCity(item.id)
-                                    setSaveCity(item.name)
+                                    setSaveCity(item.id)
+                                    if (item.name === "Select your City"){
+                                        setIsCitySelected(false)
+                                    } else{
+                                        setIsCitySelected(true)
+                                    }
                                 }}
                             />
                         </View>
@@ -870,44 +865,26 @@ export function CreateAccountScreen({route, navigation}){
 
 
                         <View style={styles.snapchatInputContainer}>
-                            <Fumi
-                                label={'Snapchat'}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'snapchat-ghost'}
-                                iconColor={'#1e0412'}
-                                iconSize={20}
-                                iconWidth={40}
-                                inputPadding={20}
+                            <TextInput
                                 style={styles.inputField}
                                 onChangeText={handleSnapchatChange}
+                                placeholder={'Snapchat'}
                             />
 
                         </View>
                         <View style={styles.tiktokInputContainer}>
-                            <Fumi
-                                label={'Tiktok'}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'video-camera'}
-                                iconColor={'#1e0412'}
-                                iconSize={20}
-                                iconWidth={40}
-                                inputPadding={20}
+                            <TextInput
                                 style={styles.inputField}
                                 onChangeText={handleTiktokChange}
+                                placeholder={'Tiktok'}
                             />
 
                         </View>
                         <View style={styles.instagramInputContainer}>
-                            <Fumi
-                                label={'Instagram'}
-                                iconClass={FontAwesomeIcon}
-                                iconName={'instagram'}
-                                iconColor={'#1e0412'}
-                                iconSize={20}
-                                iconWidth={40}
-                                inputPadding={20}
+                            <TextInput
                                 style={styles.inputField}
                                 onChangeText={handleInstagramChange}
+                                placeholder={'Instagram'}
                             />
 
                         </View>
@@ -1163,7 +1140,9 @@ const styles = StyleSheet.create({
         top: window.height*0.16,
     },
     inputField: {
-        borderRadius: 30
+        borderRadius: 30,
+        padding: 20,
+        backgroundColor: "white"
     },
 
     genderContainer: {

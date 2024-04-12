@@ -4,7 +4,7 @@ import {
     Text,
     StyleSheet,
     Dimensions,
-    Button
+    Button, Image
 } from 'react-native';
 import { ThemedButton } from 'react-native-really-awesome-button';
 import AntDesign from "react-native-vector-icons/AntDesign.js";
@@ -15,12 +15,14 @@ const window = Dimensions.get('window');
 
 const db = [
     {
-        name: 'Richard Hendricks',
-        img: require('../../assets/images/female.png')
+        name: 'Richard Hendrickswerwerew',
+        img: require('../../assets/images/dog.png'),
+        age: 12
     },
     {
         name: 'Erlich Bachman',
-        img: require('../../assets/images/female.png')
+        img: require('../../assets/images/earth_loadingscreen.png'),
+        age: 30
     },
 ]
 
@@ -32,14 +34,42 @@ export function SwipePageScreen({ navigation }) {
     const [isPressedLogin, setIsPressedLogin] = useState(false);
     const [text, setText] = useState('');
     const swiperRef = useRef(null);
+    const[diamonds, setDiamonds] = useState(10);
+    const [disable, setDisable] = useState(false);
+    const [cardsEnd, setCardsEnd] = useState(false);
 
     const swiped = (direction, nameToDelete) => {
         console.log('removing: ' + nameToDelete)
         setLastDirection(direction)
     }
 
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.substring(0, maxLength - 3) + '...';
+        }
+        return text;
+    };
+
     const outOfFrame = (name) => {
         console.log(name + ' left the screen!')
+    }
+
+    const onSwiped=() => {
+        if(diamonds === 1){
+            setDisable(true);
+        }
+        setDiamonds(diamonds - 1);
+    }
+
+    const onSwipedButton=(text) =>{
+        if(!cardsEnd && diamonds !== 0){
+            if(text === "left"){
+                swiperRef.current.swipeLeft();
+            }
+            if(text === "right"){
+                swiperRef.current.swipeRight();
+            }
+        }
     }
 
     return (
@@ -48,17 +78,33 @@ export function SwipePageScreen({ navigation }) {
             <View style={styles.cardContainer}>
                 <Swiper
                     ref={swiperRef}
-                    cards={['DO', 'MORE', 'OF', 'WHAT', 'MAKES', 'YOU', 'HAPPY']}
+                    cards={db}
+                    disableLeftSwipe={disable}
+                    disableRightSwipe={disable}
+                    disableBottomSwipe={disable}
+                    disableTopSwipe={disable}
                     renderCard={(card) => {
                         return (
                             <View style={styles.card}>
-                                <Text style={styles.text}>{card}</Text>
+                                <View style={styles.cardContent}>
+                                <Image
+                                    source={card.img}
+                                    style={styles.cardImage}
+                                />
+                                </View>
+                                <View>
+                                    <Text style={styles.cardName}>
+                                        {truncateText(card.name, 18)}
+                                        {'  '}
+                                    </Text>
+                                <Text style={styles.cardAge}>{card.age}</Text>
+                                </View>
                             </View>
                         )
                     }}
 
-                    onSwiped={(cardIndex) => {console.log(cardIndex)}}
-                    onSwipedAll={() => {console.log('onSwipedAll')}}
+                    onSwiped={() => {onSwiped()}}
+                    onSwipedAll={() => {setCardsEnd(true)}}
                     cardIndex={0}
                     stackSize= {6}>
                 </Swiper>
@@ -77,7 +123,7 @@ export function SwipePageScreen({ navigation }) {
                         textFontFamily={'AbhayaLibre-Medium'}
                         activeOpacity={0.7}
                         onPressIn={() => {
-                            swiperRef.current.swipeLeft();
+                            onSwipedButton("left")
                         }}
                     >
                         <AntDesign
@@ -101,7 +147,7 @@ export function SwipePageScreen({ navigation }) {
                     textFontFamily={'AbhayaLibre-Medium'}
                     activeOpacity={0.7}
                     onPressIn={() => {
-                        swiperRef.current.swipeRight();
+                        onSwipedButton("right")
                     }}
                 >
                     <AntDesign
@@ -115,6 +161,17 @@ export function SwipePageScreen({ navigation }) {
             </View>
 
 
+            <View style={styles.buttonsAbove}>
+                <View style={styles.diamondBackground}>
+                    <Text style={styles.diamonds}>{diamonds}</Text>
+                    <AntDesign
+                        style={styles.iconDiamond}
+                        color={'#171C3D'}
+                        name="heart"
+                        size={25}
+                    />
+                </View>
+
             <View style={styles.profileButton}>
                 <ThemedButton
                     name="rick"
@@ -126,7 +183,7 @@ export function SwipePageScreen({ navigation }) {
                     textSize={20}
                     textFontFamily={'AbhayaLibre-Medium'}
                     activeOpacity={0.7}
-                    onPress={() => navigation.navigate('ProfilePage')}
+                    onPress={() => navigation.navigate('ProfileScreen')}
                 >
                     <AntDesign
                         style={styles.iconDrop}
@@ -135,6 +192,7 @@ export function SwipePageScreen({ navigation }) {
                         size={22}
                     />
                 </ThemedButton>
+            </View>
             </View>
 
 
@@ -152,7 +210,7 @@ export function SwipePageScreen({ navigation }) {
                         activeOpacity={0.7}
                         onPressIn={() => setIsPressedLogin(true)}
                         onPressOut={() => setIsPressedLogin(false)}
-                        onPress={() => navigation.navigate('Introduction')}
+                        onPress={() => navigation.navigate('FilterScreen')}
                     >
                         <AntDesign
                             style={styles.iconDrop}
@@ -175,7 +233,7 @@ export function SwipePageScreen({ navigation }) {
                         activeOpacity={0.7}
                         onPressIn={() => setIsPressedLogin(true)}
                         onPressOut={() => setIsPressedLogin(false)}
-                        onPress={() => navigation.navigate('ProfileScreen')}
+                        onPress={() => navigation.navigate('ProfilePage')}
                     >
                         <AntDesign
                             style={styles.iconDrop}
@@ -198,7 +256,7 @@ export function SwipePageScreen({ navigation }) {
                         activeOpacity={0.7}
                         onPressIn={() => setIsPressedLogin(true)}
                         onPressOut={() => setIsPressedLogin(false)}
-                        onPress={() => navigation.navigate('Introduction')}
+                        onPress={() => navigation.navigate('ShopScreen')}
                     >
                         <AntDesign
                             style={styles.iconDrop}
@@ -257,8 +315,6 @@ export function SwipePageScreen({ navigation }) {
 
             </View>
 
-
-
         </View>
     );
 }
@@ -270,10 +326,33 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    iconDiamond:{
+        paddingLeft: 15
+    },
 
     buttons: {
         flexDirection: 'row',
-        top: window.height*0.30
+        top: window.height*0.31
+    },
+    diamondBackground: {
+        flexDirection: "row",
+        width: 150,
+        height: 50,
+        bottom: window.height*0.35,
+        left: window.width*0.30,
+        backgroundColor: '#C9D0FF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+    },
+    buttonsAbove: {
+        flexDirection: "row",
+    },
+    diamonds:{
+        fontSize: 20,
+        paddingLeft: 10,
+        fontWeight: 'bold',
+        color: 'black',
     },
 
     loginButtonContainer: {
@@ -292,15 +371,15 @@ const styles = StyleSheet.create({
         alignContent: "center",
         alignItems: "center",
         width: window.width,
-        bottom: window.height*0.28,
+        bottom: window.height*0.24,
     },
     card: {
         backgroundColor: '#C9D0FF',
-        width: '100%',
+        width: window.width*0.7,
         alignItems: "center",
         alignSelf: "center",
         maxWidth: 250,
-        height: '100%',
+        height: window.height*0.8,
         maxHeight: 350,
         shadowColor: 'black',
         shadowOpacity: 0.2,
@@ -308,11 +387,27 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         resizeMode: 'cover',
     },
+    cardContent:{
+        top: window.height*0.01,
+        height: window.height*0.38,
+        width: window.width*0.63,
+    },
+    cardName:{
+        bottom: window.height*0.02,
+        right: window.width*0.04,
+        fontSize: 22,
+        color: "white",
+    },
+    cardAge:{
+        bottom:window.height*0.02,
+        fontSize: 22,
+        color: "white",
+    },
     cardImage: {
+        flex: 1,
         width: '100%',
         height: '100%',
-        overflow: 'hidden',
-        borderRadius: 20,
+        resizeMode: 'cover',
     },
     cardTitle: {
         position: 'absolute',
@@ -337,7 +432,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     profileButton: {
-        bottom: window.height*0.39,
-        right: window.width*0.34,
+        bottom: window.height*0.35,
+        right: window.width*0.55,
     }
 });

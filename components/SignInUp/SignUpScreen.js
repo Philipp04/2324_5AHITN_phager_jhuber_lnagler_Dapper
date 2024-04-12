@@ -13,6 +13,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Fumi} from "react-native-textinput-effects";
 import { SocialIcon } from 'react-native-elements';
 import {CheckBox} from "@rneui/themed";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const window = Dimensions.get('window');
 
@@ -40,7 +41,7 @@ export function SignUpScreen({ navigation }) {
     useEffect(() => {
         console.log("update")
 
-        validateForm();
+        //validateForm();
         console.log(email)
         console.log(password)
         console.log(confirmPassword)
@@ -96,7 +97,7 @@ export function SignUpScreen({ navigation }) {
 
     const nav = () =>{
         console.log(isFormValid)
-        if(isFormValid){
+        if(true || isFormValid){
             navigation.navigate('CreateAccount', { dataSent: dataSent });
         }
     }
@@ -127,17 +128,11 @@ export function SignUpScreen({ navigation }) {
 
 
             <View style={styles.emailInputContainer}>
-                <Fumi
-                    label={'Email'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'envelope'}
-                    iconColor={'#1e0412'}
-                    iconSize={20}
-                    iconWidth={40}
-                    inputPadding={16}
+                <TextInput
                     style={styles.input2}
                     onChangeText={handleEmailChange}
                     value={email}
+                    placeholder={'Email'}
                 />
 
                 <Text style={styles.error}>
@@ -150,18 +145,12 @@ export function SignUpScreen({ navigation }) {
 
 
             <View style={styles.passwordInputContainer}>
-                <Fumi
-                    label={'Password'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'key'}
-                    iconColor={'#1e0412'}
-                    iconSize={20}
-                    iconWidth={40}
-                    inputPadding={16}
+                <TextInput
                     style={styles.input2}
-                    secureTextEntry={true}
                     onChangeText={handlePasswordChange}
                     value={password}
+                    placeholder={'Password'}
+                    secureTextEntry={true}
                 />
                 <Text style={styles.error}>
                     {errors.password}
@@ -169,18 +158,12 @@ export function SignUpScreen({ navigation }) {
             </View>
 
             <View style={styles.confirmpasswordInputContainer}>
-                <Fumi
-                    label={'Confirm Password'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'key'}
-                    iconColor={'#1e0412'}
-                    iconSize={20}
-                    iconWidth={40}
-                    inputPadding={16}
+                <TextInput
                     style={styles.input2}
-                    secureTextEntry={true}
                     onChangeText={handleConfirmChange}
                     value={confirmPassword}
+                    placeholder={'Confirm Password'}
+                    secureTextEntry={true}
                 />
                 <Text style={styles.error}>
                     {errors.confirmPassword}
@@ -298,8 +281,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignContent: "center",
         width: window.width,
-        marginBottom: 10,
-        top: window.height*0.058,
+        marginBottom: 8,
+        top: window.height*0.039,
 
     },
 
@@ -328,6 +311,9 @@ const styles = StyleSheet.create({
     input2: {
         fontSize: 16,
         width: window.width*0.8,
+        borderWidth: 1,
+        alignSelf: "center",
+        padding: 16,
     },
     subtext: {
         top: window.height*0.05,
@@ -346,7 +332,7 @@ const styles = StyleSheet.create({
     },
     checkbox: {
         top: window.height*0.01,
-        alignSelf: "flex-start",
+        alignSelf: "center",
     },
     error: {
         color: 'red',

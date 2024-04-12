@@ -11,6 +11,9 @@ import {SelectInterestsScreen} from "./Create Account/SelectInterestsScreen.js";
 import {SwipePageScreen} from "./MainPage/SwipePageScreen.js";
 import {MatchPageScreen} from "./MainPage/MatchPageScreen.js";
 import {ProfileScreen} from "./Profile/ProfileScreen.js";
+import {ShopPageScreen} from "./MainPage/ShopPage.js";
+import {FilterScreen} from "./MainPage/FilterScreen.js";
+
 
 export default function App(){
 
@@ -37,7 +40,6 @@ export default function App(){
                 screenOptions={{
                     headerShown:false,
                     animation: 'none'
-
                 }}
                 >
 
@@ -49,9 +51,12 @@ export default function App(){
                 <Stack.Screen name="SelectInterests" component={SelectInterestsScreen}/>
                 <Stack.Screen name="SwipePage" component={SwipePageScreen}/>
                 <Stack.Screen name="MatchPage" component={MatchPageScreen}/>
-                <Stack.Screen name="ProfilePage" component={ProfileScreen}/>
+                <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+                <Stack.Screen name="ShopScreen" component={ShopPageScreen}/>
+                <Stack.Screen name="FilterScreen" component={FilterScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
+
 
 
     );
